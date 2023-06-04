@@ -1,3 +1,8 @@
+CREATE DATABASE  IF NOT EXISTS `employee_management`;
+USE `employee_management`;
+
+DROP TABLE IF EXISTS `Employee`, `Attendance`, `LeaveRequest`;
+
 -- Create the Employee table 
 CREATE TABLE Employee (
 	id INTEGER PRIMARY KEY,
@@ -16,8 +21,8 @@ CREATE TABLE Attendance (
     FOREIGN KEY (employee_id) REFERENCES Employee (id)
 );
 
--- Create the Leave table
-CREATE TABLE Leave (
+-- Create the LeaveRequest table
+CREATE TABLE LeaveRequest (
     id INTEGER PRIMARY KEY,
     employee_id INTEGER,
     start_date DATE,
