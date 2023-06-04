@@ -5,16 +5,16 @@ DROP TABLE IF EXISTS `Employee`, `Attendance`, `LeaveRequest`;
 
 -- Create the Employee table 
 CREATE TABLE Employee (
-	id INTEGER PRIMARY KEY,
+	id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(100),
-	email VARCHAR(100),
+	email  VARCHAR(100) UNIQUE,
 	designation VARCHAR(100),
 	department VARCHAR(100)
 );
 
 -- Create the Attendance table
 CREATE TABLE Attendance (
-    id INTEGER PRIMARY KEY,
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     employee_id INTEGER,
     date DATE,
     status VARCHAR(20),
@@ -23,7 +23,7 @@ CREATE TABLE Attendance (
 
 -- Create the LeaveRequest table
 CREATE TABLE LeaveRequest (
-    id INTEGER PRIMARY KEY,
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     employee_id INTEGER,
     start_date DATE,
     end_date DATE,

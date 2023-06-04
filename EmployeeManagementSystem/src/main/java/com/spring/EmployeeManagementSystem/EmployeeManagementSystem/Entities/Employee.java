@@ -1,30 +1,44 @@
 package com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Entities;
 
+import org.hibernate.validator.constraints.UniqueElements;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
+@Table(name = "Employee")
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @NotBlank(message = "name is required")
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "email", unique = true)
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
     private String email;
 
     @NotBlank(message = "Designation is required")
+    @Column(name = "designation")
     private String designation;
 
     @NotBlank(message = "Department is required")
+    @Column(name = "department")
     private String department;
+
+    // default constructor
+    public Employee() {
+    }
 
     public Employee(
             @NotBlank(message = "Name is required") String name,
@@ -40,10 +54,6 @@ public class Employee {
     // setters and getters
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
