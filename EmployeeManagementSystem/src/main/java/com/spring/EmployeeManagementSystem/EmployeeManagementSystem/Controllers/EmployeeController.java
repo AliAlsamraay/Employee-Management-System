@@ -16,56 +16,53 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/employees")
 public class EmployeeController {
     private final EmployeeService employeeService;
-    private final EmployeeDAO employeeDAO;
 
     public EmployeeController(EmployeeService employeeService, EmployeeDAO employeeDAO) {
         this.employeeService = employeeService;
-        this.employeeDAO = employeeDAO;
     }
 
-    @PostMapping("/employee")
+    @PostMapping
     public ResponseEntity<Employee> createEmployee(@Valid @RequestBody Employee employee) {
         final Employee savedEmployee = employeeService.saveEmployee(employee);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployee);
     }
 
-    @GetMapping("/employee/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
-        // Employee employee = employeeService.getEmployeeById(id);
-        final Employee employee = employeeDAO.getEmployeeById(id);
+        final Employee employee = employeeService.getEmployeeById(id);
         return ResponseEntity.ok(employee);
     }
 
-    @GetMapping("/employee")
+    @GetMapping
     public ResponseEntity<List<Employee>> getAllEmployees() {
         List<Employee> employees = employeeService.getAllEmployees();
         return ResponseEntity.ok(employees);
     }
 
-    @DeleteMapping("/employee/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/employee/name/{name}")
+    @GetMapping("/name/{name}")
     public ResponseEntity<Employee> getEmployeeByName(@PathVariable String name) {
-        Employee employee = employeeDAO.getEmployeeByName(name);
+        Employee employee = employeeService.getEmployeeByName(name);
         return ResponseEntity.ok(employee);
     }
 
-    @GetMapping("/employee/search/{name}")
+    @GetMapping("/search/{name}")
     public ResponseEntity<List<Employee>> searchEmployeeByName(@PathVariable String name) {
-        List<Employee> employees = employeeDAO.searchEmployeeByName(name);
+        List<Employee> employees = employeeService.searchEmployeeByName(name);
         return ResponseEntity.ok(employees);
     }
 
-    @PutMapping("/employee")
+    @PutMapping
     public ResponseEntity<Employee> updateEmployee(@Valid @RequestBody Employee employee) {
-        Employee updatedEmployee = employeeDAO.updateEmployee(employee);
+        Employee updatedEmployee = employeeService.updateEmployee(employee);
         return ResponseEntity.ok(updatedEmployee);
     }
 }

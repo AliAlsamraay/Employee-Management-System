@@ -1,13 +1,11 @@
 package com.spring.EmployeeManagementSystem.EmployeeManagementSystem.DAO;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Entities.Employee;
-import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Exceptions.EmailExistException;
 import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Exceptions.EmployeeNotFoundException;
 
 import jakarta.persistence.EntityManager;
@@ -61,7 +59,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         if (!employee.isEmpty()) {
             return employee.get(0);
         }
-        throw new RuntimeException("Employee not found with name: " + name);
+        throw new EmployeeNotFoundException("Employee not found with name: " + name);
     }
 
     @Override

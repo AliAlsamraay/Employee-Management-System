@@ -6,4 +6,8 @@ import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Entities.Emp
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     boolean existsByEmail(String email);
+
+    boolean existsById(Long id);
+
+    boolean existsByName(String name);
 }
