@@ -1,11 +1,14 @@
 package com.spring.EmployeeManagementSystem.EmployeeManagementSystem.DAO;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Entities.Employee;
+import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Exceptions.EmailExistException;
+import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Exceptions.EmployeeNotFoundException;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -30,8 +33,15 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     public Employee getEmployeeById(Long id) {
+        // if employee not found then it will throw EmployeeNotFoundException.
+        final String queryString = "from Employee where id = :id";
+        Employee employee = entityManager.createQuery(queryString, Employee.class).setParameter("id", id)
+                .getSingleResult();
+        if (employee != null) {
+            throw new EmployeeNotFoundException("Employee not found with id: " + id);
+        }
+
         // get employee from database using primary key/id.
-        Employee employee = entityManager.find(Employee.class, id);
         return employee;
     }
 
@@ -75,7 +85,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         // delete employee from database using primary key/id.
         // final String queryString = "DELETE FROM Employee WHERE id = :id";
         // entityManager.createQuery(queryString, Employee.class)
-        //         .setParameter("id", id).executeUpdate();
+        // .setParameter("id", id).executeUpdate();
 
         Employee employee = entityManager.find(Employee.class, id);
         entityManager.remove(employee);

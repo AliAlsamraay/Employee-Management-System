@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Entities.Employee;
+import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Exceptions.EmailExistException;
+import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Exceptions.EmployeeNotFoundException;
 import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Repositories.EmployeeRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class EmployeeService {
@@ -19,6 +19,12 @@ public class EmployeeService {
     }
 
     public Employee saveEmployee(Employee employee) {
+        // Check if the email already exists
+        if (employeeRepository.existsByEmail(employee.getEmail())) {
+            throw new EmailExistException("Email already exists: " + employee.getEmail());
+        }
+
+        // Save the employee
         return employeeRepository.save(employee);
     }
 
@@ -27,7 +33,7 @@ public class EmployeeService {
         if (employee.isPresent()) {
             return (Employee) employee.get();
         } else {
-            throw new EntityNotFoundException("Employee not found with id: " + id);
+            throw new EmployeeNotFoundException("Employee not found with id: " + id);
         }
 
     }
@@ -37,6 +43,10 @@ public class EmployeeService {
     }
 
     public void deleteEmployee(Long id) {
+        // Check if the employee exists
+        if (!employeeRepository.existsById(id)) {
+            throw new EmployeeNotFoundException("Employee not found with id: " + id);
+        }
         employeeRepository.deleteById(id);
     }
 }
