@@ -1,7 +1,39 @@
 CREATE DATABASE  IF NOT EXISTS `employee_management`;
 USE `employee_management`;
 
-DROP TABLE IF EXISTS `Employee`, `Attendance`, `LeaveRequest`;
+DROP TABLE IF EXISTS `Employee`, `Attendance`, `LeaveRequest`, `authorities`, `users`;
+
+-- Create the users table
+CREATE TABLE `users` (
+    `username` VARCHAR(50) NOT NULL,
+    `password`  VARCHAR(68) NOT NULL,
+    `enabled` TINYINT NOT NULL,
+    PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1; 
+
+-- insert initial data into users table.
+-- the password is 'abc123' for all users.
+insert into `users` values 
+('ali','{bcrypt}$2a$12$2lhISNX/0kMOM3EOZTgwVeyA7euZh9Z8EfiW3hQNGE0U16R9vb/6K',1),
+('ahmad','{bcrypt}$2a$12$A7zeB9qbw6T/2q6PgRKpxeROpjWAxYMd5WgjcT7JnNySRA38VF0Vq',1),
+('mohammad','{bcrypt}$2a$12$qg9wHqjKJs04jLoy216TxugmHiY2dWTNVfm6uHpA/A3QKT99XRsPu',1);
+
+-- Create the authorities table
+CREATE TABLE `authorities` (
+    `username` VARCHAR(50) NOT NULL,
+    `authority` VARCHAR(50) NOT NULL,
+    UNIQUE KEY `authorities5_idx_1` (`username`,`authority`),
+    CONSTRAINT `authorities5_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+-- insert initial data into roles table.
+insert into `authorities` values 
+('ali','ROLE_ADMIN'),
+('ali','ROLE_MANAGER'),
+('ali','ROLE_EMPLOYEE'),
+('ahmad','ROLE_MANAGER'),
+('mohammad','ROLE_EMPLOYEE');
 
 -- Create the Employee table 
 CREATE TABLE Employee (
