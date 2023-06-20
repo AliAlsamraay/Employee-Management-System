@@ -47,9 +47,14 @@ CREATE TABLE Employee (
 -- Create the Attendance table
 CREATE TABLE Attendance (
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    employee_id INTEGER,
+    employee_id INTEGER NOT NULL,
     date DATE,
-    status VARCHAR(20),
+    status ENUM(
+    'PRESENT', 'ABSENT', 'LATE', 
+    'EXCUSED', 'VACATION','SICK_LEAVE',
+    'WORK_FROM_HOME','BUSINESS_TRIP','OUT_OF_OFFICE','ON_LEAVE'
+    ) NOT NULL,
+    
     FOREIGN KEY (employee_id) REFERENCES Employee (id)
 );
 

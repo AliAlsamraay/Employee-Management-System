@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.DAO.EmployeeDAO;
+import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Entities.Attendance;
 import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Entities.Employee;
 import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Services.EmployeeService;
 
@@ -64,5 +65,11 @@ public class EmployeeController {
     public ResponseEntity<Employee> updateEmployee(@Valid @RequestBody Employee employee) {
         Employee updatedEmployee = employeeService.updateEmployee(employee);
         return ResponseEntity.ok(updatedEmployee);
+    }
+
+    @PostMapping("/attendance/{id}")
+    public ResponseEntity<String> markAttendance(@PathVariable Long id, @Valid @RequestBody Attendance attendance) {
+        employeeService.markAttendance(id, attendance);
+        return ResponseEntity.ok("Attendance marked successfully");
     }
 }

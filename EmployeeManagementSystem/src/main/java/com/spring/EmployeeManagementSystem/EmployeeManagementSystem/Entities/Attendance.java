@@ -1,9 +1,9 @@
 package com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Entities;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,7 +11,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
+
+import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.validators.AttendanceStatusConstraint;
 
 @Entity
 @Table(name = "Attendance")
@@ -28,22 +33,22 @@ public class Attendance {
     @Column(name = "date")
     private LocalDate date;
 
+    @AttendanceStatusConstraint
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private AttendanceStatus status;
 
-    // Constructors, getters, and setters
-
+    // Constructors
     public Attendance() {
     }
 
-    public Attendance(Employee employee, LocalDate date, String status) {
+    public Attendance(Employee employee, LocalDate date, AttendanceStatus status) {
         this.employee = employee;
         this.date = date;
         this.status = status;
     }
 
     // Getters and setters
-
     public Long getId() {
         return id;
     }
@@ -68,11 +73,11 @@ public class Attendance {
         this.date = date;
     }
 
-    public String getStatus() {
+    public AttendanceStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(AttendanceStatus status) {
         this.status = status;
     }
 }
