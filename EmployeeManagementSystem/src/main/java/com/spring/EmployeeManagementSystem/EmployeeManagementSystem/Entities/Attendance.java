@@ -1,5 +1,6 @@
 package com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,12 +12,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.validators.AttendanceStatusConstraint;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Deserializers.AttendanceStatusDeserializer;
+import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.validators.ValidAttendanceStatus;
 
 @Entity
 @Table(name = "Attendance")
@@ -26,15 +27,18 @@ public class Attendance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {
+            CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+            CascadeType.REFRESH, })
+    @JoinColumn(name = "employee_id")
     private Employee employee;
 
     @Column(name = "date")
     private LocalDate date;
 
-    @AttendanceStatusConstraint
+    @ValidAttendanceStatus(message = "Invalid attendance status provided")
     @Enumerated(EnumType.STRING)
+    @JsonDeserialize(using = AttendanceStatusDeserializer.class)
     @Column(name = "status")
     private AttendanceStatus status;
 
@@ -80,4 +84,5 @@ public class Attendance {
     public void setStatus(AttendanceStatus status) {
         this.status = status;
     }
+
 }

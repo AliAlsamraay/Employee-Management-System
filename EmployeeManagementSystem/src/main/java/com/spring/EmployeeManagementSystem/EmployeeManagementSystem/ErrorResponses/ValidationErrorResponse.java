@@ -1,14 +1,14 @@
 package com.spring.EmployeeManagementSystem.EmployeeManagementSystem.ErrorResponses;
 
-public class EmployeeErrorResponse {
+public class ValidationErrorResponse {
     private int statusCode;
     private String message;
     private long timeStamp;
 
-    public EmployeeErrorResponse() {
+    public ValidationErrorResponse() {
     }
 
-    public EmployeeErrorResponse(int statusCode, String message, long timeStamp) {
+    public ValidationErrorResponse(int statusCode, String message, long timeStamp) {
         this.statusCode = statusCode;
         this.message = message;
         this.timeStamp = timeStamp;
@@ -24,7 +24,7 @@ public class EmployeeErrorResponse {
         this.statusCode = statusCode;
     }
 
-    public EmployeeErrorResponse statusCode(int statusCode) {
+    public ValidationErrorResponse statusCode(int statusCode) {
         this.statusCode = statusCode;
         return this;
     }

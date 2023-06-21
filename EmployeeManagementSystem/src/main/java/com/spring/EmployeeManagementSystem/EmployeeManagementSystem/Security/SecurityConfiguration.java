@@ -18,11 +18,12 @@ public class SecurityConfiguration {
 
         @Bean
         public UserDetailsManager userDetailsManager(DataSource datasource) {
-                return new JdbcUserDetailsManager(datasource);
+            return new JdbcUserDetailsManager(datasource);
         }
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
                 // give the admin role permission to delete.
                 // give the manager role permission to add and update.
                 // give the employee role permission to view.

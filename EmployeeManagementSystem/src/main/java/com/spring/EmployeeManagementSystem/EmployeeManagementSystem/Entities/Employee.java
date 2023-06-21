@@ -1,12 +1,15 @@
 package com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Entities;
 
-import org.hibernate.validator.constraints.UniqueElements;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -19,8 +22,8 @@ public class Employee {
     @Column(name = "id")
     private Long id;
 
-    @NotBlank(message = "name is required")
     @Column(name = "name")
+    @NotBlank(message = "Name is required")
     private String name;
 
     @Column(name = "email", unique = true)
@@ -32,9 +35,12 @@ public class Employee {
     @Column(name = "designation")
     private String designation;
 
-    @NotBlank(message = "Department is required")
     @Column(name = "department")
+    @NotBlank(message = "Department is required")
     private String department;
+
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
+    private List<Attendance> attendances;
 
     // default constructor
     public Employee() {
@@ -49,6 +55,7 @@ public class Employee {
         this.email = email;
         this.designation = designation;
         this.department = department;
+
     }
 
     // setters and getters
@@ -86,6 +93,23 @@ public class Employee {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Attendance> getAttendances() {
+        return attendances;
+    }
+
+    public void setAttendance(List<Attendance> attendances) {
+        this.attendances = attendances;
+    }
+
+    // add attendance to employee.
+    public void addAttendance(Attendance attendance) {
+        if (this.attendances == null) {
+            this.attendances = new ArrayList<>();
+        }
+        this.attendances.add(attendance);
+        attendance.setEmployee(this);
     }
 
     // toString method

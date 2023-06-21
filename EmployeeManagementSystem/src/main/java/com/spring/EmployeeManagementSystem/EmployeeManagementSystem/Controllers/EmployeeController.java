@@ -21,7 +21,7 @@ import java.util.List;
 public class EmployeeController {
     private final EmployeeService employeeService;
 
-    public EmployeeController(EmployeeService employeeService, EmployeeDAO employeeDAO) {
+    public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
@@ -67,9 +67,4 @@ public class EmployeeController {
         return ResponseEntity.ok(updatedEmployee);
     }
 
-    @PostMapping("/attendance/{id}")
-    public ResponseEntity<String> markAttendance(@PathVariable Long id, @Valid @RequestBody Attendance attendance) {
-        employeeService.markAttendance(id, attendance);
-        return ResponseEntity.ok("Attendance marked successfully");
-    }
 }
