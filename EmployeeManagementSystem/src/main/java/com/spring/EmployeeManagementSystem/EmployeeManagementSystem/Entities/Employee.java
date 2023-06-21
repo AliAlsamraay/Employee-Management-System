@@ -3,6 +3,8 @@ package com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -40,7 +42,8 @@ public class Employee {
     private String department;
 
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
-    private List<Attendance> attendances;
+    @JsonManagedReference
+    private List<Attendance> attendances = new ArrayList<>();
 
     // default constructor
     public Employee() {

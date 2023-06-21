@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.Deserializers.AttendanceStatusDeserializer;
 import com.spring.EmployeeManagementSystem.EmployeeManagementSystem.validators.ValidAttendanceStatus;
@@ -31,6 +32,7 @@ public class Attendance {
             CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
             CascadeType.REFRESH, })
     @JoinColumn(name = "employee_id")
+    @JsonBackReference
     private Employee employee;
 
     @Column(name = "date")
