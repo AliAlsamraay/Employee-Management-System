@@ -1,7 +1,7 @@
 CREATE DATABASE  IF NOT EXISTS `employee_management`;
 USE `employee_management`;
 
-DROP TABLE IF EXISTS `Employee`, `Attendance`, `LeaveRequest`, `authorities`, `users`;
+DROP TABLE IF EXISTS `Manager`, `Employee`, `Attendance`, `LeaveRequest`, `authorities`, `users`;
 
 -- Create the users table
 CREATE TABLE `users` (
@@ -35,17 +35,28 @@ insert into `authorities` values
 ('ahmad','ROLE_MANAGER'),
 ('mohammad','ROLE_EMPLOYEE');
 
+-- Create the Manager table
+CREATE TABLE `Manager` (
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    email  VARCHAR(100) UNIQUE,
+    department VARCHAR(100)
+);
+
 -- Create the Employee table 
-CREATE TABLE Employee (
+CREATE TABLE `Employee` (
 	id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	name VARCHAR(100),
+	name VARCHAR(100) NOT NULL,
 	email  VARCHAR(100) UNIQUE,
 	designation VARCHAR(100),
-	department VARCHAR(100)
+	department VARCHAR(100),
+    salary INTEGER,
+    manager_id INTEGER NOT NULL,
+    FOREIGN KEY (manager_id) REFERENCES Manager (id)
 );
 
 -- Create the Attendance table
-CREATE TABLE Attendance (
+CREATE TABLE `Attendance` (
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     employee_id INTEGER NOT NULL,
     date DATE,
@@ -59,7 +70,7 @@ CREATE TABLE Attendance (
 );
 
 -- Create the LeaveRequest table
-CREATE TABLE LeaveRequest (
+CREATE TABLE `LeaveRequest` (
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     employee_id INTEGER,
     start_date DATE,
