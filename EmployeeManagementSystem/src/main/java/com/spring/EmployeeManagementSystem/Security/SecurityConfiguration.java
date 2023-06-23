@@ -30,17 +30,24 @@ public class SecurityConfiguration {
                 http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
                                 .requestMatchers(HttpMethod.DELETE, "/api/**")
                                 .hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.POST, "/api/**", "/api/employees/**",
+                                .requestMatchers(HttpMethod.POST, "/api/employees/**",
                                                 "api/manager/**",
                                                 "api/attendance-records",
                                                 "api/attendance-records", "api/attendance-records")
                                 .hasAnyRole("ADMIN", "MANAGER")
+                                // the employee can create leave requests for himself.
+                                .requestMatchers(HttpMethod.POST,
+                                                "/api/leave-requests")
+                                .hasAnyRole("ADMIN", "MANAGER", "EMPLOYEE")
                                 .requestMatchers(HttpMethod.PUT, "/api/employees", "/api/employees/**",
                                                 "/api/manager/**",
                                                 "api/attendance-records",
-                                                "api/attendance-records", "api/attendance-records/**")
+                                                "api/attendance-records", "api/attendance-records/**",
+                                                "/api/leave-requests", "/api/leave-requests/**")
                                 .hasAnyRole("ADMIN", "MANAGER")
-                                .requestMatchers(HttpMethod.GET, "/api/employees", "/api/employees/**",
+                                .requestMatchers(HttpMethod.GET, "/api/leave-requests", "/api/leave-requests/**",
+                                                "/api/employees",
+                                                "/api/employees/**",
                                                 "/api/manager/**",
                                                 "api/attendance-records",
                                                 "api/attendance-records/**")

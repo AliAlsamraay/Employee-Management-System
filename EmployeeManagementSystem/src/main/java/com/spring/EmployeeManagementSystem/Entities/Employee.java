@@ -24,7 +24,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "Employee")
+@Table(name = "employee")
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +52,10 @@ public class Employee {
     @JsonManagedReference
     private List<Attendance> attendances = new ArrayList<>();
 
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<LeaveRequest> leaveRequests = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = {
             CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
             CascadeType.REFRESH, })
@@ -74,12 +78,18 @@ public class Employee {
             @NotBlank(message = "Email is required") @Email(message = "Invalid email format") String email,
             @NotBlank(message = "Designation is required") String designation,
             @NotBlank(message = "Department is required") String department,
-            Integer salary) {
+            Integer salary,
+            Manager manager,
+            List<Attendance> attendances,
+            List<LeaveRequest> leaveRequests) {
         this.name = name;
         this.email = email;
         this.designation = designation;
         this.department = department;
         this.salary = salary;
+        this.manager = manager;
+        this.attendances = attendances;
+        this.leaveRequests = leaveRequests;
     }
 
     // setters and getters
@@ -144,7 +154,7 @@ public class Employee {
         }
     }
 
-    public int getSalary() {
+    public Integer getSalary() {
         return salary;
     }
 
@@ -159,6 +169,14 @@ public class Employee {
 
     public void setManager(Manager manager) {
         this.manager = manager;
+    }
+
+    public List<LeaveRequest> getLeaveRequests() {
+        return leaveRequests;
+    }
+
+    public void setLeaveRequests(List<LeaveRequest> leaveRequests) {
+        this.leaveRequests = leaveRequests;
     }
 
     // toString method

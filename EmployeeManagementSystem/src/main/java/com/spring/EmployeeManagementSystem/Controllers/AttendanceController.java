@@ -23,35 +23,37 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/employees/attendance")
 public class AttendanceController {
-    private final AttendanceService attendanceService;
+private final AttendanceService attendanceService;
 
-    public AttendanceController(AttendanceService attendanceService) {
-        this.attendanceService = attendanceService;
-    }
+public AttendanceController(AttendanceService attendanceService) {
+this.attendanceService = attendanceService;
+}
 
-    @PostMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<HashMap<String, String>> markAttendance(@PathVariable Long id,
-            @Valid @RequestBody Attendance attendance) {
-        attendanceService.markAttendance(id, attendance);
-        HashMap<String, String> response = new HashMap<>();
-        response.put("message", "Attendance marked successfully");
-        response.put("status", "success");
-        response.put("statusCode", "200");
-        return ResponseEntity.ok(response);
-    }
+@PostMapping(value = "/{employeeId}")
+public ResponseEntity<HashMap<String, String>> markAttendance(@PathVariable
+Long employeeId,
+@Valid @RequestBody Attendance attendance) {
+attendanceService.markAttendance(employeeId, attendance);
+HashMap<String, String> response = new HashMap<>();
+response.put("message", "Attendance marked successfully");
+response.put("status", "success");
+response.put("statusCode", "200");
+return ResponseEntity.ok(response);
+}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<Attendance>> getEmployeeAttendanceById(@PathVariable Long id) {
-        List<Attendance> attendance = attendanceService.getAllAttendances(id);
-        return ResponseEntity.ok(attendance);
-    }
+@GetMapping("/{id}")
+public ResponseEntity<List<Attendance>>
+getEmployeeAttendanceById(@PathVariable Long id) {
+List<Attendance> attendance = attendanceService.getAllAttendances(id);
+return ResponseEntity.ok(attendance);
+}
 
-    @GetMapping
-    public Page<Attendance> getPaginatedAttendances(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return attendanceService.getPaginatedAttendances(pageable);
-    }
+@GetMapping
+public Page<Attendance> getPaginatedAttendances(
+@RequestParam(defaultValue = "0") int page,
+@RequestParam(defaultValue = "10") int size) {
+Pageable pageable = PageRequest.of(page, size);
+return attendanceService.getPaginatedAttendances(pageable);
+}
 
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.spring.EmployeeManagementSystem.ErrorResponses.ValidationErrorResponse;
+import com.spring.EmployeeManagementSystem.Exceptions.AccessDeniedException;
 import com.spring.EmployeeManagementSystem.Exceptions.EmailExistException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -50,6 +51,19 @@ public class RequestsHandler {
                 });
 
                 return errors;
+        }
+
+        // this function to handle access denied exception.
+        @ExceptionHandler(AccessDeniedException.class)
+        public ResponseEntity<ValidationErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
+                final ValidationErrorResponse error = new ValidationErrorResponse(HttpStatus.FORBIDDEN.value(),
+                                ex.getMessage(),
+                                System.currentTimeMillis());
+
+                final ResponseEntity<ValidationErrorResponse> responseEntity = new ResponseEntity<>(error,
+                                HttpStatus.FORBIDDEN);
+
+                return responseEntity;
         }
 
         // this function to handle invalid request body.

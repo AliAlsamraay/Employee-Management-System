@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = AttendanceStatusValidator.class)
 @Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidAttendanceStatus {
+public @interface ValidateAttendanceStatus {
     String message() default "Invalid attendance status provided";
 
     Class<?>[] groups() default {};

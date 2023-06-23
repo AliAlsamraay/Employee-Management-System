@@ -32,13 +32,13 @@ public class ManagerController {
         this.managerService = managerService;
     }
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
+    @PostMapping
     public ResponseEntity<Manager> createManager(@Valid @RequestBody Manager manager) {
         managerService.createManager(manager);
         return ResponseEntity.ok(manager);
     }
 
-    @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<HashMap<String, String>> updateManager(@PathVariable Long id, @RequestBody Manager manager) {
         managerService.updateManager(id, manager);
         return ResponseEntity.ok(
@@ -61,7 +61,7 @@ public class ManagerController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping
     public ResponseEntity<Page<Manager>> getAllManagersPaginated(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -69,12 +69,12 @@ public class ManagerController {
         return ResponseEntity.ok(managerService.getPaginatedManagers(pageable));
     }
 
-    @GetMapping(value = "/with-employees", produces = "application/json")
+    @GetMapping(value = "/with-employees")
     public ResponseEntity<List<ManagerProjection>> getAllManagers() {
         return ResponseEntity.ok(managerService.getAllManagersWithEmployees());
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Manager> getManagerById(@PathVariable Long id) {
         Manager manager = managerService.getManagerById(id);
         return ResponseEntity.ok(manager);

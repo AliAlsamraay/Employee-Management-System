@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
 import com.spring.EmployeeManagementSystem.Entities.Attendance;
 import com.spring.EmployeeManagementSystem.Entities.Employee;
 import com.spring.EmployeeManagementSystem.Exceptions.AttendanceMarkedException;
-import com.spring.EmployeeManagementSystem.Exceptions.EmployeeNotFoundException;
 import com.spring.EmployeeManagementSystem.Repositories.AttendanceRepository;
 import com.spring.EmployeeManagementSystem.Repositories.EmployeeRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class AttendanceService {
@@ -38,7 +39,7 @@ public class AttendanceService {
     public void markAttendance(Long employeeId, Attendance attendance) {
         // Check if the employee exists
         if (!employeeRepository.existsById(employeeId)) {
-            throw new EmployeeNotFoundException("Employee not found with id: " + employeeId);
+            throw new EntityNotFoundException("Employee not found with id: " + employeeId);
         }
 
         // Get the employee

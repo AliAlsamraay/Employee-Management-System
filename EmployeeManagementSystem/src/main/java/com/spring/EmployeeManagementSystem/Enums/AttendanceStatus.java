@@ -1,4 +1,4 @@
-package com.spring.EmployeeManagementSystem.Entities;
+package com.spring.EmployeeManagementSystem.Enums;
 
 public enum AttendanceStatus {
         PRESENT,

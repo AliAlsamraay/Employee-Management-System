@@ -20,4 +20,6 @@ public interface EmployeeDAO {
     public void deleteEmployee(Long id);
 
     public void deleteAllEmployees();
+
+    public boolean hasAccessToEmployee(Long managerId, Long employeeId);
 }

@@ -10,12 +10,13 @@ import org.springframework.stereotype.Service;
 import com.spring.EmployeeManagementSystem.DAO.EmployeeDAO;
 import com.spring.EmployeeManagementSystem.Entities.Employee;
 import com.spring.EmployeeManagementSystem.Entities.Manager;
+import com.spring.EmployeeManagementSystem.Exceptions.AccessDeniedException;
 import com.spring.EmployeeManagementSystem.Exceptions.EmailExistException;
-import com.spring.EmployeeManagementSystem.Exceptions.EmployeeNotFoundException;
 import com.spring.EmployeeManagementSystem.Projections.EmployeeProjection;
 import com.spring.EmployeeManagementSystem.Repositories.EmployeeRepository;
 
-import static java.lang.Math.toIntExact;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class EmployeeService {
@@ -32,10 +33,28 @@ public class EmployeeService {
         this.managerService = managerService;
     }
 
+    // this function to check if the manager has access to the employee or not.
+    public boolean hasAccessToEmployee(Long managerId, Long employeeId) {
+        // Check if the manager exists
+        if (!managerService.existsById(managerId)) {
+            throw new EntityNotFoundException("Manager not found with id: " +
+                    managerId);
+        }
+
+        // Check if the employee exists
+        if (!employeeRepository.existsById(employeeId)) {
+            throw new EntityNotFoundException("Employee not found with id: " +
+                    employeeId);
+        }
+
+        // Check if the manager has access to the employee or not
+        return !employeeRepository.findAllByIdAndManagerId(employeeId, managerId).isEmpty();
+    }
+
     public Employee saveEmployee(Employee employee, Long managerId) {
         // Check if the manager exists
         if (!managerService.existsById(managerId)) {
-            throw new EmployeeNotFoundException("Manager not found with id: " +
+            throw new EntityNotFoundException("Manager not found with id: " +
                     managerId);
         }
 
@@ -59,7 +78,7 @@ public class EmployeeService {
         if (employee.isPresent()) {
             return (Employee) employee.get();
         } else {
-            throw new EmployeeNotFoundException("Employee not found with id: " + id);
+            throw new EntityNotFoundException("Employee not found with id: " + id);
         }
     }
 
@@ -77,18 +96,25 @@ public class EmployeeService {
         return employeeRepository.findByManagerId(managerId);
     }
 
-    public void deleteEmployee(Long id) {
+    public void deleteEmployee(Long managerId, Long employeeId) {
         // Check if the employee exists
-        if (!employeeRepository.existsById(id)) {
-            throw new EmployeeNotFoundException("Employee not found with id: " + id);
+        if (!employeeRepository.existsById(employeeId)) {
+            throw new EntityNotFoundException("Employee not found with id: " + employeeId);
         }
-        employeeRepository.deleteById(id);
+
+        // Check if the manager has access to the employee or not
+        if (!hasAccessToEmployee(managerId, employeeId)) {
+            throw new AccessDeniedException("Manager with id: " + managerId +
+                    " has no access to employee with id: " + employeeId);
+        }
+
+        employeeRepository.deleteById(employeeId);
     }
 
     public Employee getEmployeeByName(String name) {
         try {
             if (!employeeRepository.existsByName(name)) {
-                throw new EmployeeNotFoundException("Employee not found with name: " + name);
+                throw new EntityNotFoundException("Employee not found with name: " + name);
             }
             Employee employee = employeeDAO.getEmployeeByName(name);
             return employee;
@@ -102,8 +128,46 @@ public class EmployeeService {
         return employeeDAO.searchEmployeeByName(name);
     }
 
-    public Employee updateEmployee(Employee employee) {
-        return employeeDAO.updateEmployee(employee);
+    @Transactional
+    public Employee updateEmployee(Long managerId, Employee employee) {
+
+        // Check if the employee's id is null
+        if (employee.getId() == null) {
+            throw new IllegalArgumentException("Employee's id cannot be null");
+        }
+
+        // Check if the employee exists
+        if (!employeeRepository.existsById(employee.getId())) {
+            throw new EntityNotFoundException("Employee not found with id: " + employee.getId());
+        }
+
+        // Check if the manager has access to the employee or not
+        if (!hasAccessToEmployee(managerId, employee.getId())) {
+            throw new AccessDeniedException("Manager with id: " + managerId +
+                    " has no access to employee with id: " + employee.getId());
+        }
+
+        // check if the email already exists
+        if (employeeRepository.existsByEmail(employee.getEmail())) {
+            throw new EmailExistException("Email already exists: " + employee.getEmail());
+        }
+
+        // update the employee in the database with the new data
+
+        // get the employee from the database
+        final Employee employeeFromDB = getEmployeeById(employee.getId());
+
+        // update the employee's data
+        employeeFromDB.setName(employee.getName() == null ? employeeFromDB.getName() : employee.getName());
+        employeeFromDB.setEmail(employee.getEmail() == null ? employeeFromDB.getEmail() : employee.getEmail());
+        employeeFromDB.setSalary(employee.getSalary() == null ? employeeFromDB.getSalary() : employee.getSalary());
+        employeeFromDB.setDepartment(
+                employee.getDepartment() == null ? employeeFromDB.getDepartment() : employee.getDepartment());
+        employeeFromDB.setDesignation(
+                employee.getDesignation() == null ? employeeFromDB.getDesignation() : employee.getDesignation());
+
+        // save the employee
+        return employeeRepository.save(employeeFromDB);
     }
 
 }

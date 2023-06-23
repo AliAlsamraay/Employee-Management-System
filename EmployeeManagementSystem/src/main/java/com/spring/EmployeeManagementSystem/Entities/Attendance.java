@@ -12,16 +12,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.spring.EmployeeManagementSystem.Deserializers.AttendanceStatusDeserializer;
-import com.spring.EmployeeManagementSystem.validators.ValidAttendanceStatus;
+import com.spring.EmployeeManagementSystem.Enums.AttendanceStatus;
+import com.spring.EmployeeManagementSystem.validators.ValidateAttendanceStatus;
 
 @Entity
-@Table(name = "Attendance")
+@Table(name = "attendance")
 public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +39,8 @@ public class Attendance {
     @Column(name = "date")
     private LocalDate date;
 
-    @ValidAttendanceStatus(message = "Invalid attendance status provided")
+    @NotNull(message = "Status is required")
+    @ValidateAttendanceStatus(message = "Invalid attendance status provided")
     @Enumerated(EnumType.STRING)
     @JsonDeserialize(using = AttendanceStatusDeserializer.class)
     @Column(name = "status")

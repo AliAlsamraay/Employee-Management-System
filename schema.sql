@@ -76,6 +76,9 @@ CREATE TABLE `LeaveRequest` (
     start_date DATE,
     end_date DATE,
     reason VARCHAR(200),
-    status VARCHAR(20),
+    status ENUM(
+    'PENDING', 'APPROVED', 'REJECTED', 
+    'CANCELLED','COMPLETED'
+    ) DEFAULT 'PENDING',
     FOREIGN KEY (employee_id) REFERENCES Employee (id)
 );

@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.spring.EmployeeManagementSystem.Entities.Employee;
-import com.spring.EmployeeManagementSystem.Exceptions.EmployeeNotFoundException;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Repository
@@ -31,12 +31,12 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     public Employee getEmployeeById(Long id) {
-        // if employee not found then it will throw EmployeeNotFoundException.
+        // if employee not found then it will throw EntityNotFoundException.
         final String queryString = "from Employee where id = :id";
         Employee employee = entityManager.createQuery(queryString, Employee.class).setParameter("id", id)
                 .getSingleResult();
         if (employee != null) {
-            throw new EmployeeNotFoundException("Employee not found with id: " + id);
+            throw new EntityNotFoundException("Employee not found with id: " + id);
         }
 
         // get employee from database using primary key/id.
@@ -59,7 +59,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         if (!employee.isEmpty()) {
             return employee.get(0);
         }
-        throw new EmployeeNotFoundException("Employee not found with name: " + name);
+        throw new EntityNotFoundException("Employee not found with name: " + name);
     }
 
     @Override
@@ -96,4 +96,16 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         entityManager.createQuery(queryString, Employee.class).executeUpdate();
     }
 
+    @Override
+    public boolean hasAccessToEmployee(Long managerId, Long employeeId) {
+        final String queryString = "from Employee where id = :employeeId and managerId = :managerId";
+        List<Employee> employees = entityManager.createQuery(queryString, Employee.class)
+                .setParameter("employeeId", employeeId)
+                .setParameter("managerId", managerId)
+                .getResultList();
+        if (!employees.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
 }

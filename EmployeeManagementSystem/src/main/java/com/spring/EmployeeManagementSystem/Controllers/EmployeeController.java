@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
@@ -25,8 +24,9 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createEmployee(@Valid @RequestBody Employee employee,
-            @RequestParam(required = true) Long managerId) {
+    public ResponseEntity<Employee> createEmployee(
+            @Valid @RequestBody Employee employee,
+            @RequestParam(name = "managerId", required = true) Long managerId) {
         final Employee savedEmployee = employeeService.saveEmployee(employee, managerId);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployee);
     }
@@ -37,7 +37,7 @@ public class EmployeeController {
         return ResponseEntity.ok(employee);
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping
     public ResponseEntity<Page<Employee>> getAllEmployees(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -45,9 +45,11 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.getPaginatedEmployees(pageable));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteEmployee(@PathVariable Long id) {
-        employeeService.deleteEmployee(id);
+    @DeleteMapping
+    public ResponseEntity<String> deleteEmployee(
+            @RequestParam(name = "employeeId", required = true) Long employeeId,
+            @RequestParam(name = "managerId", required = true) Long managerId) {
+        employeeService.deleteEmployee(managerId, employeeId);
         return ResponseEntity.ok("Employee deleted successfully");
     }
 
@@ -64,8 +66,10 @@ public class EmployeeController {
     }
 
     @PutMapping
-    public ResponseEntity<Employee> updateEmployee(@Valid @RequestBody Employee employee) {
-        Employee updatedEmployee = employeeService.updateEmployee(employee);
+    public ResponseEntity<Employee> updateEmployee(
+            @RequestParam(name = "managerId", required = true) Long managerId,
+            @RequestBody Employee employee) {
+        final Employee updatedEmployee = employeeService.updateEmployee(managerId, employee);
         return ResponseEntity.ok(updatedEmployee);
     }
 
