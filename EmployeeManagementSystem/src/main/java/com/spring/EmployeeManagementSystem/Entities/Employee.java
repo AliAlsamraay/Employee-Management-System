@@ -56,6 +56,10 @@ public class Employee {
     @JsonManagedReference
     private List<LeaveRequest> leaveRequests = new ArrayList<>();
 
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<PerformanceEvaluation> evaluations = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = {
             CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
             CascadeType.REFRESH, })
@@ -81,7 +85,8 @@ public class Employee {
             Integer salary,
             Manager manager,
             List<Attendance> attendances,
-            List<LeaveRequest> leaveRequests) {
+            List<LeaveRequest> leaveRequests,
+            List<PerformanceEvaluation> evaluations) {
         this.name = name;
         this.email = email;
         this.designation = designation;
@@ -90,6 +95,7 @@ public class Employee {
         this.manager = manager;
         this.attendances = attendances;
         this.leaveRequests = leaveRequests;
+        this.evaluations = evaluations;
     }
 
     // setters and getters
@@ -177,6 +183,14 @@ public class Employee {
 
     public void setLeaveRequests(List<LeaveRequest> leaveRequests) {
         this.leaveRequests = leaveRequests;
+    }
+
+    public List<PerformanceEvaluation> getEvaluations() {
+        return evaluations;
+    }
+
+    public void setEvaluations(List<PerformanceEvaluation> evaluations) {
+        this.evaluations = evaluations;
     }
 
     // toString method

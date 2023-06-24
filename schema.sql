@@ -1,7 +1,7 @@
 CREATE DATABASE  IF NOT EXISTS `employee_management`;
 USE `employee_management`;
 
-DROP TABLE IF EXISTS `Manager`, `Employee`, `Attendance`, `LeaveRequest`, `authorities`, `users`;
+DROP TABLE IF EXISTS `manager`, `employee`, `attendance`, `leave_request`, `performance_evaluations`, `authorities`, `users`;
 
 -- Create the users table
 CREATE TABLE `users` (
@@ -36,7 +36,7 @@ insert into `authorities` values
 ('mohammad','ROLE_EMPLOYEE');
 
 -- Create the Manager table
-CREATE TABLE `Manager` (
+CREATE TABLE `manager` (
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     email  VARCHAR(100) UNIQUE,
@@ -44,7 +44,7 @@ CREATE TABLE `Manager` (
 );
 
 -- Create the Employee table 
-CREATE TABLE `Employee` (
+CREATE TABLE `employee` (
 	id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(100) NOT NULL,
 	email  VARCHAR(100) UNIQUE,
@@ -52,11 +52,11 @@ CREATE TABLE `Employee` (
 	department VARCHAR(100),
     salary INTEGER,
     manager_id INTEGER NOT NULL,
-    FOREIGN KEY (manager_id) REFERENCES Manager (id)
+    FOREIGN KEY (manager_id) REFERENCES manager (id)
 );
 
 -- Create the Attendance table
-CREATE TABLE `Attendance` (
+CREATE TABLE `attendance` (
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     employee_id INTEGER NOT NULL,
     date DATE,
@@ -66,11 +66,11 @@ CREATE TABLE `Attendance` (
     'WORK_FROM_HOME','BUSINESS_TRIP','OUT_OF_OFFICE','ON_LEAVE'
     ) NOT NULL,
     
-    FOREIGN KEY (employee_id) REFERENCES Employee (id)
+    FOREIGN KEY (employee_id) REFERENCES employee (id)
 );
 
 -- Create the LeaveRequest table
-CREATE TABLE `LeaveRequest` (
+CREATE TABLE `leave_request` (
     id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
     employee_id INTEGER,
     start_date DATE,
@@ -80,5 +80,17 @@ CREATE TABLE `LeaveRequest` (
     'PENDING', 'APPROVED', 'REJECTED', 
     'CANCELLED','COMPLETED'
     ) DEFAULT 'PENDING',
-    FOREIGN KEY (employee_id) REFERENCES Employee (id)
+    FOREIGN KEY (employee_id) REFERENCES employee (id)
+);
+
+
+-- create the performance_evaluations table
+CREATE TABLE `performance_evaluations` (
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    employee_id INTEGER,
+    evaluation_date DATE,
+    rating DECIMAL(2,1),
+    expected_salary INTEGER,
+    comment VARCHAR(200),
+    FOREIGN KEY (employee_id) REFERENCES employee (id)
 );

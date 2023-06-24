@@ -33,7 +33,8 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.POST, "/api/employees/**",
                                                 "api/manager/**",
                                                 "api/attendance-records",
-                                                "api/attendance-records", "api/attendance-records")
+                                                "api/attendance-records", "api/attendance-records",
+                                                "/api/evaluations", "/api/evaluations/**")
                                 .hasAnyRole("ADMIN", "MANAGER")
                                 // the employee can create leave requests for himself.
                                 .requestMatchers(HttpMethod.POST,
@@ -43,14 +44,16 @@ public class SecurityConfiguration {
                                                 "/api/manager/**",
                                                 "api/attendance-records",
                                                 "api/attendance-records", "api/attendance-records/**",
-                                                "/api/leave-requests", "/api/leave-requests/**")
+                                                "/api/leave-requests", "/api/leave-requests/**",
+                                                "/api/evaluations", "/api/evaluations/**")
                                 .hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers(HttpMethod.GET, "/api/leave-requests", "/api/leave-requests/**",
                                                 "/api/employees",
                                                 "/api/employees/**",
                                                 "/api/manager/**",
                                                 "api/attendance-records",
-                                                "api/attendance-records/**")
+                                                "api/attendance-records/**",
+                                                "/api/evaluations", "/api/evaluations/**")
                                 .hasAnyRole("ADMIN", "MANAGER", "EMPLOYEE"));
 
                 // use basic authentication for all requests.
@@ -68,7 +71,8 @@ public class SecurityConfiguration {
 
         // final UserDetails manager = User.builder()
         // .username("manager").password("{noop}pass123").roles("EMPLOYEE",
-        // "MANAGER").build();
+        // "MANAGER")
+        // .build();
 
         // final UserDetails admin = User.builder().username("admin")
         // .password("{noop}pass123").roles("ADMIN", "EMPLOYEE", "MANAGER").build();
