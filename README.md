@@ -1,7 +1,11 @@
 # Employee Management System (REST API)
+The Employee Management System is a web-based REST API developed using Spring Boot and Java. It provides a platform for managing employee information, including creating, updating, and deleting employee profiles.
 
-The Employee Management System is a web-based REST API developed using Spring Boot and Java. 
-It provides a platform for managing employee information, including creating, updating, and deleting employee profiles. 
-The API also allows for managing attendance records, leave requests, and performance evaluations. 
-User authentication and authorization mechanisms are implemented to secure the system, and role-based access control is enforced. 
-Additionally, the API generates reports for employee performance, attendance, and other relevant metrics.
+The API features the following functionality:
+
+- Managing attendance records.
+- Handling leave requests.
+- Conducting performance evaluations.
+- Managing managers and their relationships with employees.
+  
+User authentication and authorization mechanisms have been implemented to ensure system security and enforce role-based access control.
